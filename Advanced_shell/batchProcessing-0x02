@@ -20,3 +20,44 @@ for pokemon in "${pokemon_list[@]}"; do
     # Delay to avoid hitting rate limits
     sleep 1
 done
+
+
+# TASK 4: Implement retry logic for failed requests
+
+# Directory to store Pokémon data
+mkdir -p pokemon_data
+
+# List of Pokémon
+pokemon_list=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon")
+
+# Maximum number of retries
+MAX_RETRIES=3
+
+# Loop through each Pokémon
+for pokemon in "${pokemon_list[@]}"; do
+    echo "Fetching data for $pokemon..."
+    
+    attempt=1
+    success=0
+
+    # Retry loop
+    while [ $attempt -le $MAX_RETRIES ]; do
+        if curl -s -f "https://pokeapi.co/api/v2/pokemon/$pokemon" -o "pokemon_data/$pokemon.json"; then
+            echo "Saved data to pokemon_data/$pokemon.json ✅"
+            success=1
+            break
+        else
+            echo "Attempt $attempt failed for $pokemon..."
+            ((attempt++))
+            sleep 1  # wait before retrying
+        fi
+    done
+
+    # Log error if all attempts failed
+    if [ $success -eq 0 ]; then
+        echo "Failed to fetch data for $pokemon after $MAX_RETRIES attempts." >> errors.txt
+    fi
+
+    # Delay to avoid hitting rate limits
+    sleep 1
+done
