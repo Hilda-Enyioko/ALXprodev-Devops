@@ -12,7 +12,7 @@ for pokemon in "${pokemon_list[@]}"; do
     
     # Fetch data from API
     if curl -s -f "https://pokeapi.co/api/v2/pokemon/$pokemon" -o "pokemon_data/$pokemon.json"; then
-        echo "Saved data to pokemon_data/$pokemon.json ✅"
+        echo "Saved data to pokemon_data/$pokemon.json!"
     else
         echo "Failed to fetch data for $pokemon" >> errors.txt
     fi
