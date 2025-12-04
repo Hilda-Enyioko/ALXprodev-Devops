@@ -6,10 +6,10 @@ mkdir -p pokemon_data
 # List of Pokémon
 pokemon_list=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon")
 
-# Maximum retries for each Pokémon
+# Maximum retries
 MAX_RETRIES=3
 
-# Function to fetch data for a single Pokémon
+# Function to fetch a single Pokémon
 fetch_pokemon() {
     local pokemon=$1
     local attempt=1
@@ -34,12 +34,20 @@ fetch_pokemon() {
     fi
 }
 
-# Loop through Pokémon and fetch in background
+# Start fetching in background
 for pokemon in "${pokemon_list[@]}"; do
     fetch_pokemon "$pokemon" &
 done
 
-# Wait for all background processes to finish
+# List all background jobs
+echo "Currently running background jobs:"
+jobs
+
+# Wait for all background jobs to complete
 wait
 
 echo "All Pokémon data fetched."
+
+# Verify no remaining background jobs
+echo "Remaining jobs after wait:"
+jobs
